@@ -21,13 +21,14 @@ export async function GET(req: NextRequest) {
   )
   if (!accountRes.ok) return NextResponse.json({ error: 'Summoner not found' }, { status: 404 })
   const account = await accountRes.json()
+  if (!account.puuid) return NextResponse.json({ error: 'No PUUID' }, { status: 404 })
 
   const summonerRes = await fetch(
     `https://${plat}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${account.puuid}`,
     { headers: { 'X-Riot-Token': KEY } }
   )
   const summoner = await summonerRes.json()
-  console.log('summoner:', JSON.stringify(summoner))
+  if (!summoner.id) return NextResponse.json({ error: `Summoner API error: ${JSON.stringify(summoner)}` }, { status: 500 })
 
   const rankedRes = await fetch(
     `https://${plat}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summoner.id}`,
