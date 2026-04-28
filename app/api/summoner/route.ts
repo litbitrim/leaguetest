@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
     { headers: { 'X-Riot-Token': KEY } }
   )
   const summoner = await summonerRes.json()
+  console.log('summoner:', JSON.stringify(summoner))
 
   const rankedRes = await fetch(
     `https://${plat}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summoner.id}`,
